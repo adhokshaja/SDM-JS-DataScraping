@@ -13,7 +13,7 @@ const queryOptions = {
     facets: 'country,state,make,model,class,fuelType,hullMaterial,stateCity',
     fields: `id,make,model,year,specifications.dimensions.lengths.nominal.ft,specifications.dimensions.beam.ft,specifications.weights.dry.lb,location.address,aliases,price.hidden,price.type.amount.USD,portalLink,class,condition,date.created,type,fuelType,hull.material,propulsion.engines`,
     useMultiFacetedFacets: true,
-    sort: 'modified-asc',
+    sort: 'modified-desc',
     price: '1-'
 };
 
@@ -52,6 +52,7 @@ const fetchData = async (page, pageSize=10) => {
             type,
             fuelType,
         } = boat;
+
         let formatted =  {
             id,
             url: portalLink,
@@ -68,7 +69,35 @@ const fetchData = async (page, pageSize=10) => {
             hullMaterial: boat.hull.material,
             fuelType,
             numEngines: boat.propulsion.engines.length,
+            totalHP:null,
+            maxEngineYear: null,
+            minEngineYear: null,
+            engineCategory:'',
             ...boat.location.address
+        };
+
+        if (boat.propulsion.engines && boat.propulsion.engines.length>0){
+
+            formatted.totalHP = boat.propulsion.engines.reduce((acc, i) => { 
+                    return !i.power? acc: acc + i.power.hp
+                },
+            0);
+            
+            const {min,max} = boat.propulsion.engines.reduce((acc, i) => 
+            { 
+                acc.max = acc.max > i.year ? acc.max:i.year;
+                acc.min = acc.min < i.year ? acc.min : i.year;
+                return acc;
+            }, {min:2500,max:0});
+
+
+            formatted.maxEngineYear = max;
+            formatted.minEngineYear = min;
+
+            formatted.engineCategory = boat.propulsion.engines.reduce((acc, i)=>{
+                return acc === '' || acc === i.category ? i.category : 'multiple';
+            },'');
+
         }
 
         return formatted;
@@ -83,7 +112,7 @@ for (let page = startPage; page <=10; page++){
     setTimeout(async () => {
         let boats = await fetchData(page, pageSize).catch(err=>console.error(`Page ${page} error: ${err}`));
         console.log(`Fetched Data for page ${page}`);
-        csvWriter.writeToPath(path.resolve(__dirname, `csv/page-${page}.csv`), boats,
+        csvWriter.writeToPath(path.resolve(__dirname, `csv/newest/page-${page}.csv`), boats,
             { headers: true })
             .on('error', err => console.error(err))
             .on('finish', () => console.log(`Done writing page ${page}`));
