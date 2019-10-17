@@ -1,0 +1,20 @@
+{
+  "name": "datascraper-boattrader",
+  "version": "0.0.1",
+  "description": "Data Scraper for Boattrader.com. Part of the Stat. Data Mining course final project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Data",
+    "scraper",
+    "api"
+  ],
+  "author": "Adhokshaja Achar Budihal Prasad",
+  "license": "ISC",
+  "devDependencies": {
+    "fast-csv": "^3.4.0",
+    "node-fetch": "^2.6.0"
+  }
+}
