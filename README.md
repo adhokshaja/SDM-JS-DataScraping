@@ -3,7 +3,7 @@ This repo contains code and data files related to scraping data from the website
 This was done as a part of the Final Project for Statistical Data Mining.
 
 ## Process
-The data scraping is done using an API call. The API is advertised publically, however is used to display search results page.
+The data scraping is done using an API call. The API is not advertised publically, however is used to display search results page.
 The API Uri and associated query parameters can be found in the the script,[index.js](./index.js).
 
 ## Known limitations
