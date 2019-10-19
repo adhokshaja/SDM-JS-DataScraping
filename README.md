@@ -52,5 +52,7 @@ It is possible that duplicates might exist after merging the data files. It is r
 # Disclaimer
 The code and data files in the repo are provided as is. The author of the repo provides no guarantee the script will work at a later date. The author further assumes no responsibility for misuse of data or scripts.
 
+If you plan to use this code or data in your project, make sure to read the LICENSE document.
+
 # Contribution
 No pull requests will be accepted.
