@@ -11,10 +11,10 @@ const queryOptions = {
     apikey,
     country: 'US',
     facets: 'country,state,make,model,class,fuelType,hullMaterial,stateCity',
-    fields: `id,make,model,year,specifications.dimensions.lengths.nominal.ft,specifications.dimensions.beam.ft,specifications.weights.dry.lb,location.address,aliases,price.hidden,price.type.amount.USD,portalLink,class,condition,date.created,type,fuelType,hull.material,propulsion.engines`,
+    fields: `id,make,model,year,specifications.dimensions.lengths.nominal.ft,specifications.dimensions.beam.ft,specifications.weights.dry.lb,location.address,aliases,price.hidden,price.type.amount.USD,portalLink,class,condition,date.created,type,fuelType,hull.material,propulsion.engines,owner.id`,
     useMultiFacetedFacets: true,
-    sort: 'modified-asc',
-    price: '0-'
+    sort: 'modified-desc',
+    price: '500-'
 };
 
 const headerOptions = {
@@ -74,6 +74,7 @@ const fetchData = async (page, pageSize=10) => {
             minEngineYear: null,
             engineCategory:'',
             price: boat.price && boat.price.type && boat.price.type.amount.USD,
+            sellerId: boat.owner && boat.owner.id ,
             ...boat.location.address
         };
 
@@ -113,7 +114,7 @@ for (let page = startPage; page <=10; page++){
     setTimeout(async () => {
         let boats = await fetchData(page, pageSize).catch(err=>console.error(`Page ${page} error: ${err}`));
         console.log(`Fetched Data for page ${page}`);
-        csvWriter.writeToPath(path.resolve(__dirname, `csv/oldest/page-${page}.csv`), boats,
+        csvWriter.writeToPath(path.resolve(__dirname, `csv/newest/page-${page}.csv`), boats,
             { headers: true })
             .on('error', err => console.error(err))
             .on('finish', () => console.log(`Done writing page ${page}`));
